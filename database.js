@@ -9,22 +9,26 @@ const pool = createPool({
     connectionLimit: 10,
 })
 
-pool.query(`select * from albums`, (error, result, fields) => {
-    console.log("Fields -> ", fields);
-    // console.log("Pool -> ", pool);
-    if(error){
-        return console.log("Error -> ", error);
-    }
-    for(el of result){
-        console.log("NAME -> ", el.name);
-    }
-    
-})
-// To check on which version our sql workbench is running
-// SELECT VERSION()  
+module.exports.getDataFromSQL = async function(){
+    console.log("Step 1");
+    return new Promise((resolve, reject) => {
+        pool.query(`select * from albums`, (error, result, fields) => {
+            console.log("Step 2");
+            if (error) {
+                console.log("Error -> ", error);
+                reject(error);
+            }
+            console.log("Step 3");
+            console.log("Result's Length -> ", result.length)
+            console.log("Step 4");
+            resolve(result);
+            console.log("Step 5");
+        })
+    });
+    console.log("Step 6"); // This will be executed before the query is finished
+}
 
-// To check for the host, user and plugin for the Sql client connection 
+// SELECT VERSION()  
 // SELECT host, user, plugin FROM mysql.user WHERE user = 'root';
 
-// To alter the password of the user
 // ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'dummy';
